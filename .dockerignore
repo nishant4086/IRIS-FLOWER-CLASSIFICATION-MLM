@@ -1,0 +1,25 @@
+# Ignore local virtual environment
+ml_env/
+venv/
+.venv/
+env/
+
+# Ignore git folder
+.git/
+.gitignore
+
+# Ignore local outputs
+outputs/
+
+# Ignore caching structures
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Ignore workspace metadata and task planning docs
+.DS_Store
+.github/
+task.md
+walkthrough.md
+implementation_plan.md
+README.md

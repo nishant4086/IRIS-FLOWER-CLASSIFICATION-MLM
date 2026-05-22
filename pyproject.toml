@@ -1,0 +1,27 @@
+[tool.ruff]
+# Set the maximum line length to 120 characters.
+line-length = 120
+
+# Target Python 3.11 as used in the project env
+target-version = "py311"
+
+[tool.ruff.lint]
+# Enable Pyflakes (F) and pycodestyle (E, W) codes by default.
+# Also enable bugbear (B) for common bugs, isort (I) for import sorting,
+# and builtins (A) to prevent shadowing.
+select = ["E", "F", "W", "I", "B", "A"]
+ignore = ["E501"]
+
+# Exclude virtual environments and caches
+exclude = [
+    "ml_env",
+    "venv",
+    ".venv",
+    ".git",
+    "__pycache__",
+    "build",
+    "dist"
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true

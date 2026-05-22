@@ -1,0 +1,25 @@
+# Virtual environment
+ml_env/
+venv/
+.venv/
+env/
+
+# Python bytecode/cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Project outputs (generated plots/models)
+outputs/
+
+# Streamlit logs/config
+.streamlit/
+*.log
+
+# IDE files
+.vscode/
+.idea/
