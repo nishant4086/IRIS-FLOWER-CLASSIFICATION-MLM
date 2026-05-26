@@ -16,6 +16,7 @@ This project is structured as a formal system submission, comprising a robust, p
 7. [Inference Pipeline CLI Guide](#-inference-pipeline-cli-guide)
 8. [Interactive Benchmarking Dashboard](#-interactive-benchmarking-dashboard)
 9. [Experimental Results & Discussion](#-experimental-results--discussion)
+10. [CI/CD Jenkins Pipeline](#-cicd-jenkins-pipeline)
 
 ---
 
@@ -177,4 +178,25 @@ Based on testing on a stratified 20% validation split (30 samples), the models a
 2. **Decision Tree Depth**:
    * Shallow trees (e.g., depth=1) suffer from underfitting (unable to classify all three species).
    * Deeper trees can capture exact outliers, which degrades test accuracy on unseen validation sets.
+
+---
+
+## ⛓️ CI/CD Jenkins Pipeline
+
+This project includes a declarative `Jenkinsfile` at the root directory to automate the continuous integration and delivery (CI/CD) workflow.
+
+### Pipeline Stages
+
+The pipeline is organized into the following automated steps:
+1. **Setup & Install**: Initializes a local virtual environment and installs package dependencies from `requirements.txt`.
+2. **Lint & Static Analysis**: Runs `ruff` check to enforce Python PEP 8 style standards and code cleanliness.
+3. **Train & Validate Model**: Runs the machine learning training pipeline (`python iris_classification.py --train`) to verify that the classification training and inference flows execute correctly, then archives the generated visual graphs (`outputs/*.png`) as build artifacts.
+4. **Docker Build**: Packages the application into a Docker container image using the multi-stage `Dockerfile`.
+5. **Docker Security Scan**: Utilizes `trivy` to scan the Docker image for high/critical security vulnerabilities.
+6. **Docker Push**: Pushes the tested and verified image to the Docker Registry (configured with credentials in Jenkins).
+
+### Execution
+
+To run the pipeline, configure a **Pipeline** job in Jenkins pointing to the repository URL, and Jenkins will automatically execute the stages defined in [Jenkinsfile](file:///Users/nishantrankawat/Documents/project/Jenkinsfile).
+
 # IRIS-FLOWER-CLASSIFICATION-MLM
