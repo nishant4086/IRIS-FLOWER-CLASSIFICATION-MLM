@@ -147,6 +147,16 @@ This deploys a local web server (typically running on `http://localhost:8501`) d
 * **Live Inference Engine**: Interactive inputs to run classification inferences.
 * **Technical Design**: Structural details of the underlying system model.
 
+### 📸 Dashboard Showcase
+
+Below are screenshots demonstrating the interactive Streamlit analytical system in action:
+
+#### 1. Exploratory Data Analysis & Feature Analytics
+![Exploratory Data Analysis Showcase](streamlit_dashboard_1.png)
+
+#### 2. Model Performance Benchmarking & Live Inference
+![Model Benchmarking & Inference Showcase](streamlit_dashboard_2.png)
+
 ---
 
 ## 📊 Experimental Results & Discussion
