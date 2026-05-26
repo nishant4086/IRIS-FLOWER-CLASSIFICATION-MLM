@@ -27,8 +27,8 @@ fi
 
 # Retrieve AWS account info
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
-AWS_REGION=$(aws configure get region)
-AWS_REGION=${AWS_REGION:-$DEFAULT_REGION}
+# Force AWS region to us-east-1 because AWS App Runner is not supported in ap-south-1
+AWS_REGION="us-east-1"
 
 echo "[INFO] Using AWS Account ID: ${AWS_ACCOUNT_ID}"
 echo "[INFO] Using AWS Region: ${AWS_REGION}"
@@ -37,9 +37,9 @@ ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
 ECR_REPO_URL="${ECR_REGISTRY}/${APP_NAME}"
 
 # 3. Create AWS ECR Repository if it doesn't exist
-echo "[INFO] Checking ECR repository: ${APP_NAME}..."
-if ! aws ecr describe-repositories --repository-names "${APP_NAME}" &> /dev/null; then
-    echo "[INFO] Creating ECR repository '${APP_NAME}'..."
+echo "[INFO] Checking ECR repository: ${APP_NAME} in region ${AWS_REGION}..."
+if ! aws ecr describe-repositories --repository-names "${APP_NAME}" --region "${AWS_REGION}" &> /dev/null; then
+    echo "[INFO] Creating ECR repository '${APP_NAME}' in region '${AWS_REGION}'..."
     aws ecr create-repository --repository-name "${APP_NAME}" --region "${AWS_REGION}" > /dev/null
     echo "[INFO] ECR Repository created successfully."
 else
@@ -63,12 +63,12 @@ docker push "${ECR_REPO_URL}:latest"
 echo "[INFO] Image successfully pushed to ECR."
 
 # 7. Check if App Runner service exists, and update/create it
-echo "[INFO] Checking AWS App Runner service status..."
-SERVICE_ARN=$(aws apprunner list-services --query "ServiceSummaryList[?ServiceName=='${APP_NAME}-service'].ServiceArn" --output text)
+echo "[INFO] Checking AWS App Runner service status in region ${AWS_REGION}..."
+SERVICE_ARN=$(aws apprunner list-services --region "${AWS_REGION}" --query "ServiceSummaryList[?ServiceName=='${APP_NAME}-service'].ServiceArn" --output text)
 
 if [ -n "${SERVICE_ARN}" ]; then
     echo "[INFO] App Runner Service exists (ARN: ${SERVICE_ARN}). Triggering deployment..."
-    aws apprunner start-deployment --service-arn "${SERVICE_ARN}" > /dev/null
+    aws apprunner start-deployment --service-arn "${SERVICE_ARN}" --region "${AWS_REGION}" > /dev/null
     echo "[INFO] Deployment triggered. It will take a few minutes to complete."
 else
     echo "[INFO] App Runner Service does not exist. Creating a new service..."
