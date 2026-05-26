@@ -174,7 +174,7 @@ sleep 5
 PUBLIC_IP=""
 RETRIES=0
 while [ -z "${PUBLIC_IP}" ] || [ "${PUBLIC_IP}" == "None" ]; do
-    if [ ${RETRIES} -eq 6 ]; do
+    if [ ${RETRIES} -eq 6 ]; then
         echo "[WARNING] Could not retrieve Public IP automatically. Please check your EC2 Console."
         break
     fi
