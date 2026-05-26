@@ -9,7 +9,7 @@ pipeline {
         
         // AWS Configuration
         AWS_REGION = 'us-east-1'
-        AWS_ACCOUNT_ID = '123456789012' // Replace with your AWS Account ID in Jenkins env/configuration
+        AWS_ACCOUNT_ID = '799884780873' // Real AWS Account ID
         AWS_APP_NAME = 'iris-classifier-app'
         AWS_CREDENTIALS_ID = 'aws-credentials' // Jenkins AWS credentials ID
     }
