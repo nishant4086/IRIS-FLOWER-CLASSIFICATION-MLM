@@ -137,9 +137,9 @@ apt-get install -y docker.io
 systemctl start docker
 systemctl enable docker
 
-# Install AWS CLI v2
+# Install AWS CLI v2 (ARM64 version for Graviton)
 apt-get install -y unzip curl
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 ./aws/install
 
