@@ -6,6 +6,12 @@ pipeline {
         DOCKER_IMAGE = 'nishant4086/iris-classification-mlm'
         IMAGE_TAG = "${env.BUILD_NUMBER}"
         REGISTRY_CREDENTIALS_ID = 'docker-hub-credentials'
+        
+        // AWS Configuration
+        AWS_REGION = 'us-east-1'
+        AWS_ACCOUNT_ID = '123456789012' // Replace with your AWS Account ID in Jenkins env/configuration
+        AWS_APP_NAME = 'iris-classifier-app'
+        AWS_CREDENTIALS_ID = 'aws-credentials' // Jenkins AWS credentials ID
     }
 
     options {
@@ -82,6 +88,27 @@ pipeline {
                 }
                 */
                 echo 'Docker push is commented out by default. Configure registry credentials to enable it.'
+            }
+        }
+
+        stage('AWS ECR Push & App Runner Deploy') {
+            when {
+                branch 'main'
+            }
+            steps {
+                echo 'Deploying application to AWS App Runner...'
+                // Note: Requires AWS CLI installed on the Jenkins agent and AWS Credentials bound in Jenkins
+                /*
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: AWS_CREDENTIALS_ID,
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
+                    sh './deploy.sh'
+                }
+                */
+                echo 'AWS App Runner deployment is commented out by default. Configure AWS credentials in Jenkins to enable.'
             }
         }
     }

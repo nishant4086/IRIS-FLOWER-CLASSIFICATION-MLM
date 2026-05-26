@@ -17,6 +17,7 @@ This project is structured as a formal system submission, comprising a robust, p
 8. [Interactive Benchmarking Dashboard](#-interactive-benchmarking-dashboard)
 9. [Experimental Results & Discussion](#-experimental-results--discussion)
 10. [CI/CD Jenkins Pipeline](#-cicd-jenkins-pipeline)
+11. [AWS Cloud Deployment](#-aws-cloud-deployment)
 
 ---
 
@@ -198,5 +199,58 @@ The pipeline is organized into the following automated steps:
 ### Execution
 
 To run the pipeline, configure a **Pipeline** job in Jenkins pointing to the repository URL, and Jenkins will automatically execute the stages defined in [Jenkinsfile](file:///Users/nishantrankawat/Documents/project/Jenkinsfile).
+
+---
+
+## ☁️ AWS Cloud Deployment
+
+The application is configured to run on **AWS App Runner** (a fully managed container hosting service) using the project's multi-stage [Dockerfile](file:///Users/nishantrankawat/Documents/project/Dockerfile). 
+
+We support two deployment methods: **Automated script deployment (GitOps/Local CLI)** and **GitHub Webhook direct deployment**.
+
+### Method 1: Automated CLI Deployment (`deploy.sh`)
+
+A helper script [deploy.sh](file:///Users/nishantrankawat/Documents/project/deploy.sh) is provided to automate local or CI/CD pushes to AWS.
+
+#### Prerequisites
+1. Install the [AWS CLI](https://aws.amazon.com/cli/).
+2. Authenticate your CLI with active credentials:
+   ```bash
+   aws configure
+   ```
+3. Make sure the Docker daemon (Docker Desktop) is running locally.
+
+#### Deploy
+Execute the deployment script from your project root:
+```bash
+./deploy.sh
+```
+
+This script will:
+* Retrieve your AWS Account details.
+* Check for or create a private ECR repository called `iris-classifier-app`.
+* Authenticate your local Docker client to ECR.
+* Build the local Docker image and push it to ECR.
+* Look up or create the `AppRunnerECRAccessRole` role.
+* Initialize or trigger a deployment update to your AWS App Runner service (`iris-classifier-app-service`).
+
+---
+
+### Method 2: GitHub Direct Connection (No CLI Credentials Required)
+
+This is the simplest way to maintain a live production dashboard directly from GitHub:
+
+1. Open the **AWS Management Console** and navigate to **AWS App Runner**.
+2. Click **Create Service**.
+3. Under *Source*, select **Source code repository**.
+4. Connect your GitHub account and select your repository: `nishant4086/IRIS-FLOWER-CLASSIFICATION-MLM`.
+5. Under *Deployment settings*, select **Automatic** (so every commit to `main` triggers a deployment).
+6. Under *Configure build*:
+   * Select **Use configuration file** or **Configure all settings here**.
+   * Choose **Docker** as the runtime.
+7. Under *Configure service*:
+   * Specify port **`8501`** (since Streamlit exposes 8501).
+   * Choose virtual CPU and memory size (e.g., `1 vCPU` and `2 GB` RAM).
+8. Click **Create & Deploy**. AWS App Runner will build the Docker container and output a public HTTPS URL (e.g., `https://xxxxxx.us-east-1.awsapprunner.com`) for your live dashboard.
 
 # IRIS-FLOWER-CLASSIFICATION-MLM
